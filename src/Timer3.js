@@ -1,42 +1,66 @@
-import * as React from "react";
+import React, { useState, useEffect } from 'react';
 import { render } from "react-dom";
 
-import "./styles.css";
+
+export default function Timer() {
+  const [second, setSecond] = useState('00');
+  const [minute, setMinute] = useState('00');
+  const [isActive, setIsActive] = useState(false);
+  const [counter, setCounter] = useState(0);
 
 
-const timeIsUp = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+  useEffect(() => {
+    let intervalId;
 
-function TomatoTimer(startTime) {
+    if (isActive) {
+      intervalId = setInterval(() => {
+        const secondCounter = counter % 60;
+        const minuteCounter = Math.floor(counter / 60);
 
-  const RemainingTime = Date.parse(startTime) - Date.parse(new Date());
-  const minutes = Math.floor((startTime / 1000 / 60) % 60);
-  // startTime = (minutes * 25)
-  const [counter, setCounter] = React.useState(startTime);
+        let computedSecond =
+          String(secondCounter).length === 1
+            ? `0${secondCounter}`
+            : secondCounter;
+        let computedMinute =
+          String(minuteCounter).length === 1
+            ? `0${minuteCounter}`
+            : minuteCounter;
 
-  // const seconds = Math.floor((total / 1000) % 60);
+        setSecond(computedSecond);
+        setMinute(computedMinute);
 
+        setCounter(counter => counter + 1);
+      }, 1000)
+    }
 
-  React.useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000 / 60 % 60);
-  }, [counter]);
+    return () => clearInterval(intervalId);
+  }, [isActive, counter]);
 
-  console.log("counter:", parseInt(counter))
+  function stopTimer() {
+    setIsActive(false);
+    setCounter(0);
+    setSecond("00");
+    setMinute("00");
+  }
 
   return (
-    <div className="TomatoTimer">
-      <div className="timer-container">
-        <div className="timer-title">TOMATO TIMER
-        <br />
-          <div className="timer">
-            {parseInt(counter)}
-          </div>
-        </div>
+    <div class="container">
+      <div class="time">
+        <span class="minute">{minute}</span>
+        <span>:</span>
+        <span class="second">{second}</span>
+      </div>
+      <div class="buttons">
+        <button onClick={() => setIsActive(!isActive)} class="start">
+          {isActive ? "Pause" : "Start"}
+        </button>
+        <button onClick={stopTimer} class="reset">
+          Reset
+        </button>
       </div>
     </div>
   );
-}
+};
 
 const rootElement = document.getElementById("root");
-render(<TomatoTimer />, rootElement);
-
-
+render(<Timer />, rootElement);

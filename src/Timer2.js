@@ -6,7 +6,7 @@ import "./styles.css";
 
 
 
-function TomatoTimer() {
+function TomatoTimer2() {
   const [counter, setCounter] = React.useState(10);
   // const [timerOn, setTimerOn] = React.useState(false);
 
@@ -43,7 +43,7 @@ function TomatoTimer() {
     return (
       <div className="TomatoTimer">
         <div className="timer-container">
-          <div className="timer-title">TOMATO TIMER
+          <div className="timer-title">TOMATO TIMER 2
         <br />
             <div className="timer">
               {prettifyCounter(counter)}
@@ -59,7 +59,5 @@ function TomatoTimer() {
     );
   }
 
-  const rootElement = document.getElementById("root");
-  render(<TomatoTimer />, rootElement);
 
 
